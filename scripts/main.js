@@ -1,5 +1,5 @@
 const app = document.querySelector("#app");
-const BASE_URL = "https://linuxlab-back-itk9y.ondigitalocean.app/";
+const BASE_URL = "https://linuxlab-back-itk9y.ondigitalocean.app";
 let signing = false;
 
 const commands = {
