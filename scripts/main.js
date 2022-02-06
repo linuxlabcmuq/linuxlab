@@ -1,12 +1,25 @@
 const app = document.querySelector("#app");
 const BASE_URL = "https://linuxlab-back-itk9y.ondigitalocean.app";
 let signing = false;
+const form_url =
+  "https://docs.google.com/forms/d/e/1FAIpQLSdcE8KjkzscgDT471-BF5cWPMdyJ6FDXtE40yhBqLYxCTb5kA/viewform?usp=sf_link";
 
 const commands = {
   about: {
     text: "Who are we and what are we doing?",
     action: async () => {
-      createText("We are some people and we really want a linux lab at CMUQ!");
+      console.log("Test");
+      createText("A real computer scientist knows how to use unix.");
+      createText(
+        "During our major, we have only minor exposure to a unix environment and we want to change that!"
+      );
+      createText(
+        "Our proposal is to have a computer lab whose machines have only linux, so we have no other choice but to learn how to use it!"
+      );
+      createText("If you support this idea, sign our petition!");
+      createText(
+        "(If you had trouble figuring it out how this webapp works, you should sign the petition!!)"
+      );
     },
   },
   clear: {
@@ -29,16 +42,17 @@ const commands = {
     },
   },
   sign: {
-    text: "Support our initiation - sign the petition by entering your email",
+    text: "Support our initiation - sign the petition by submitting the google form",
     action: async () => {
-      signing = true;
-      createText("Please, enter your email:");
+      createText("The google form will be opened in the new tab.");
+      await new Promise((r) => setTimeout(r, 1000));
+      window.open(form_url, "_blank").focus();
     },
   },
   stats: {
     text: "See how many people have signed the petition",
     action: async () => {
-      createText("Fetching data from the server:");
+      createText("Fetching data from the server...");
       const { isSuccess, message } = await stats();
       if (isSuccess) {
         trueValue(`${message} people have signed the petition`);
@@ -83,18 +97,16 @@ async function open_terminal() {
 }
 
 function new_line() {
-  if (!signing) {
-    const p = document.createElement("p");
-    const span1 = document.createElement("span");
-    const span2 = document.createElement("span");
-    p.setAttribute("class", "path");
-    p.textContent = "# user";
-    span1.textContent = " in";
-    span2.textContent = " ~/linux_lab";
-    p.appendChild(span1);
-    p.appendChild(span2);
-    app.appendChild(p);
-  }
+  const p = document.createElement("p");
+  const span1 = document.createElement("span");
+  const span2 = document.createElement("span");
+  p.setAttribute("class", "path");
+  p.textContent = "# user";
+  span1.textContent = " in";
+  span2.textContent = " ~/linux_lab";
+  p.appendChild(span1);
+  p.appendChild(span2);
+  app.appendChild(p);
   const div = document.createElement("div");
   div.setAttribute("class", "type");
   const i = document.createElement("i");
@@ -113,17 +125,6 @@ function removeInput() {
 
 async function getInputValue() {
   const value = document.querySelector("input").value;
-  if (signing) {
-    createText(value);
-    const { isSuccess, message } = await signByEmail(value);
-    if (isSuccess) {
-      trueValue(message);
-    } else {
-      falseValue(message);
-    }
-    signing = false;
-    return;
-  }
   if (commands.hasOwnProperty(value)) {
     trueValue(value);
     await commands[value].action();
@@ -131,6 +132,7 @@ async function getInputValue() {
     falseValue(value);
     createText(`command not found: ${value}`);
   }
+  window.scrollTo(0, app.scrollHeight);
 }
 
 function trueValue(value) {
@@ -144,6 +146,7 @@ function trueValue(value) {
   div.appendChild(i);
   div.appendChild(mensagem);
   app.appendChild(div);
+  window.scrollTo(0, app.scrollHeight);
 }
 
 function falseValue(value) {
@@ -157,6 +160,7 @@ function falseValue(value) {
   div.appendChild(i);
   div.appendChild(mensagem);
   app.appendChild(div);
+  window.scrollTo(0, app.scrollHeight);
 }
 
 function createText(text, classname) {
@@ -164,6 +168,7 @@ function createText(text, classname) {
 
   p.innerHTML = text;
   app.appendChild(p);
+  window.scrollTo(0, app.scrollHeight);
 }
 
 function createCode(code, text) {
@@ -171,21 +176,8 @@ function createCode(code, text) {
   p.setAttribute("class", "code");
   p.innerHTML = `${code} <br/><span class='text'> ${text} </span>`;
   app.appendChild(p);
+  window.scrollTo(0, app.scrollHeight);
 }
-
-open_terminal();
-
-const signByEmail = async (email) => {
-  return axios
-    .get(`${BASE_URL}/sign?email=${email}`)
-    .then((response) => {
-      return response.data;
-    })
-    .catch((error) => {
-      console.error(error);
-      return { isSuccess: false, message: "Server error happened, sorry :(" };
-    });
-};
 
 const stats = async () => {
   return axios
@@ -198,3 +190,5 @@ const stats = async () => {
       return { isSuccess: false, message: "Server error happened, sorry :(" };
     });
 };
+
+open_terminal();

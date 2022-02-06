@@ -1,1 +1,1 @@
-# Terminal Style Campaign for Linux Lab at CMUQ
+# Terminal Style Campaign for Unix Lab at CMUQ
