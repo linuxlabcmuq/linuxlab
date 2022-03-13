@@ -199,7 +199,7 @@ async function mobile() {
   await delay(700);
   createText("Starting the server...");
   await delay(800);
-  falseValue("Please, open this link on your laptop/desktop");
+  falseValue("This mobile phone is not running Linux, so open it on your laptop!");
   await delay(1000);
   createText(`But you can submit a google form at <a class="formlink" href=${form_url}> link <a>`)
 }
