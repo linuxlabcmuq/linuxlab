@@ -201,7 +201,7 @@ async function mobile() {
   await delay(800);
   falseValue("Please, open this link on your laptop/desktop");
   await delay(1000);
-  createText(`But you can submit a google form <a class="formlink" href=${form_url}> link <a>`)
+  createText(`But you can submit a google form at <a class="formlink" href=${form_url}> link <a>`)
 }
 
 if (window.innerWidth < 700) {
