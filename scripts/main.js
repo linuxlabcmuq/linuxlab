@@ -37,28 +37,29 @@ const commands = {
     text: "See all commands.",
     action: async () => {
       for (const [key, { text }] of Object.entries(commands)) {
-        createCode(key, text);
+        if (key != "ls"){
+          createCode(key, text);
+        }
       }
+    },
+  },
+  ls: {
+    text: "I got you!",
+    action: async () => {
+      start();
+      createText("Congrats, you found me, but really enter 'sign' command");
+      stop();
     },
   },
   sign: {
     text: "Support our initiation - sign the petition by submitting the google form",
     action: async () => {
+      start();
       createText("The google form will be opened in the new tab.");
-      await new Promise((r) => setTimeout(r, 1000));
+      stop();
+      await new Promise((r) => setTimeout(r, 1500));
       window.open(form_url, "_blank").focus();
-    },
-  },
-  stats: {
-    text: "See how many people have signed the petition",
-    action: async () => {
-      createText("Fetching data from the server...");
-      const { isSuccess, message } = await stats();
-      if (isSuccess) {
-        trueValue(`${message} people have signed the petition`);
-      } else {
-        falseValue(message);
-      }
+      
     },
   },
 };
@@ -85,11 +86,13 @@ async function open_terminal() {
   createText("Welcome");
   await delay(700);
   createText("Starting the server...");
-  await delay(1500);
+  await delay(800);
   createText("You can run several commands:");
 
   for (const [key, { text }] of Object.entries(commands)) {
-    createCode(key, text);
+    if (key != "ls"){
+      createCode(key, text);
+    }
   }
 
   await delay(500);
@@ -191,4 +194,32 @@ const stats = async () => {
     });
 };
 
-open_terminal();
+async function mobile() {
+  createText("Welcome");
+  await delay(700);
+  createText("Starting the server...");
+  await delay(800);
+  falseValue("Please, open this link on your laptop/desktop");
+  await delay(1000);
+  createText(`But you can submit a google form <a class="formlink" href=${form_url}> link <a>`)
+}
+
+if (window.innerWidth < 700) {
+  mobile();
+} else{
+  open_terminal();
+}
+
+const start = () => {
+  setTimeout(function() {
+      confetti.start()
+  }, 1000); // 1000 is time that after 1 second start the confetti ( 1000 = 1 sec)
+};
+
+//  Stop
+
+const stop = () => {
+  setTimeout(function() {
+      confetti.stop()
+  }, 5000); // 5000 is time that after 5 second stop the confetti ( 5000 = 5 sec)
+};
